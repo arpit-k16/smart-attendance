@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const [remember, setRemeber] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,12 +23,30 @@ export default function Login() {
 
     // Teacher Login
     if(email === TEACHER_EMAIL && password === TEACHER_PASS) {
+      const userData = {
+        email : email,
+        role : "Teacher",
+      };
+
+      if(remember){
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+
       navigate("/");
       return;
     }
 
     // Student Login
     if(email === STUDENT_EMAIL && password === STUDENT_PASS) {
+      const userData = {
+        email : email,
+        role : "Student",
+      };
+
+      if(remember){
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+
       navigate("/student-dashboard");
       return;
     }
@@ -113,7 +133,10 @@ export default function Login() {
                 {/* Additional Options */}
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                    <input type="checkbox"
+                     checked = {remember}
+                     onChange={(e) => setRemeber(e.target.checked)}
+                     className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                     <span className="text-sm text-gray-500 select-none">Remember me</span>
                   </label>
                   <Link to="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline">
